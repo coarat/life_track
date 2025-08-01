@@ -2,14 +2,15 @@ import 'package:drift/drift.dart';
 import '../app_database.dart';
 import '../tables/users.dart';
 
+import './user_dao_interface.dart';
+
 part 'user_dao.g.dart';
 
 @DriftAccessor(tables: [Users])
-class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
+class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin implements IUserDao {
   UserDao(super.db);
 
-  Future<List<User>> getAllUsers() => select(users).get();
-
+  @override
   Future<void> insertUser({
     required String displayName,
     required String email,
@@ -28,6 +29,7 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     );
   }
 
+  @override
   Future<void> updateUser({
     required int id,
     String? displayName,
@@ -45,6 +47,7 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
     );
   }
 
-  Future<void> deleteUserByUid(int id) =>
+  @override
+  Future<void> deleteUser(int id) =>
       (delete(users)..where((tbl) => tbl.id.equals(id))).go();
 }

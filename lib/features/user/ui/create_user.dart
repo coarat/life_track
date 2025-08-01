@@ -38,9 +38,9 @@ class _CreateUserScreenState extends ConsumerState<CreateUserScreen> {
       return;
     }
 
-    final db = ref.read(dbProvider); // ProviderでDB取得してる想定
+    final userP = ref.read(userDaoProvider);
 
-    await db.userDao.insertUser(
+    await userP.insertUser(
       displayName: displayName,
       email: email,
       isPremium: false,
