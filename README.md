@@ -46,3 +46,13 @@ r // ホットリロード
 R // ホットリスタート
 ```
 
+## ローカルDBファイルをコピー
+
+```
+// Android
+adb exec-out run-as com.example.life_track cat app_flutter/app.db > ~/Desktop/app_export.db
+
+// iOS
+find ~/Library/Developer/CoreSimulator -name app.db
+cp <見つけたパス> ~/Desktop/app_export.db
+```
