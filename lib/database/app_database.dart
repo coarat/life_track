@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 import './tables/users.dart';
 
 // daos
-import './daos/user_dao.dart';
+import 'daos/user.dart';
 
 part 'app_database.g.dart';
 
