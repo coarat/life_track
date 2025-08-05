@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../providers/app_providers.dart';
+import 'package:life_track/providers/app_providers.dart';
+import 'package:life_track/features/user/domain/entities/user.dart';
+import 'package:go_router/go_router.dart';
 
 class CreateUserScreen extends ConsumerStatefulWidget {
   const CreateUserScreen({super.key});
@@ -38,16 +40,13 @@ class _CreateUserScreenState extends ConsumerState<CreateUserScreen> {
       return;
     }
 
-    final db = ref.read(dbProvider); // ProviderでDB取得してる想定
+    final entity = UserEntity(displayName: displayName, email: email);
 
-    await db.userDao.insertUser(
-      displayName: displayName,
-      email: email,
-      isPremium: false,
-    );
+    final userR = ref.read(userRepositoryProvider);
+    await userR.insert(entity);
 
     if (mounted) {
-      Navigator.pop(context); // 戻る
+      context.go('/');
     }
   }
 
