@@ -10,21 +10,24 @@ class UserRepository implements IUserRepository {
   UserRepository(this._dao);
 
   @override
-  Future<int> insert(UserEntity user) {
+  Future<void> insert(UserEntity user) async {
     final entry = user.toCompanion();
-    return _dao.insertRecord(entry);
+    _dao.insertRecord(entry);
+    return;
   }
 
   @override
-  Future<bool> update(UserEntity user) {
+  Future<void> update(UserEntity user) async {
     final entry = user.toCompanion();
-    return _dao.updateRecord(entry);
+    _dao.updateRecord(entry);
+    return;
   }
 
   @override
-  Future<int> delete(int id) {
-    final entry = UsersCompanion(id: Value(id));
-    return _dao.deleteRecord(entry);
+  Future<void> delete(String uid) async {
+    final entry = UsersCompanion(uid: Value(uid));
+    _dao.deleteRecord(entry);
+    return;
   }
 
   Stream<List<UserEntity>> watchAllUsers() {
