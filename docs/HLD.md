@@ -47,8 +47,6 @@
 |----------------|----------|------|
 | id             | int   | ID |
 | uid          | String   | Firebase UID（リレーション） |
-| last_name           | String   | 表示名 |
-| first_name           | String   | 表示名 |
 | height_cm      | Float    | 身長（cm） |
 | weight_kg      | Float    | 体重（kg） |
 | birthday       | Date     | 生年月日 |
