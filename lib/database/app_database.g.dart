@@ -8,15 +8,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $UsersTable(this.attachedDatabase, [this._alias]);
-  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  static const VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
-  late final GeneratedColumn<int> id = GeneratedColumn<int>(
-      'id', aliasedName, false,
-      hasAutoIncrement: true,
-      type: DriftSqlType.int,
-      requiredDuringInsert: false,
-      defaultConstraints:
-          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  late final GeneratedColumn<String> uid = GeneratedColumn<String>(
+      'uid', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
   static const VerificationMeta _displayNameMeta =
       const VerificationMeta('displayName');
   @override
@@ -51,7 +47,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           GeneratedColumn.constraintIsAlways('CHECK ("is_premium" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, displayName, email, createdAt, updatedAt, isPremium];
+      [uid, displayName, email, createdAt, updatedAt, isPremium];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -62,8 +58,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
     }
     if (data.containsKey('display_name')) {
       context.handle(
@@ -99,13 +98,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {uid};
   @override
   User map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return User(
-      id: attachedDatabase.typeMapping
-          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      uid: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}uid'])!,
       displayName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}display_name'])!,
       email: attachedDatabase.typeMapping
@@ -126,14 +125,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 }
 
 class User extends DataClass implements Insertable<User> {
-  final int id;
+  final String uid;
   final String displayName;
   final String email;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool? isPremium;
   const User(
-      {required this.id,
+      {required this.uid,
       required this.displayName,
       required this.email,
       required this.createdAt,
@@ -142,7 +141,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['id'] = Variable<int>(id);
+    map['uid'] = Variable<String>(uid);
     map['display_name'] = Variable<String>(displayName);
     map['email'] = Variable<String>(email);
     map['created_at'] = Variable<DateTime>(createdAt);
@@ -155,7 +154,7 @@ class User extends DataClass implements Insertable<User> {
 
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
-      id: Value(id),
+      uid: Value(uid),
       displayName: Value(displayName),
       email: Value(email),
       createdAt: Value(createdAt),
@@ -170,7 +169,7 @@ class User extends DataClass implements Insertable<User> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
-      id: serializer.fromJson<int>(json['id']),
+      uid: serializer.fromJson<String>(json['uid']),
       displayName: serializer.fromJson<String>(json['displayName']),
       email: serializer.fromJson<String>(json['email']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
@@ -182,7 +181,7 @@ class User extends DataClass implements Insertable<User> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'id': serializer.toJson<int>(id),
+      'uid': serializer.toJson<String>(uid),
       'displayName': serializer.toJson<String>(displayName),
       'email': serializer.toJson<String>(email),
       'createdAt': serializer.toJson<DateTime>(createdAt),
@@ -192,14 +191,14 @@ class User extends DataClass implements Insertable<User> {
   }
 
   User copyWith(
-          {int? id,
+          {String? uid,
           String? displayName,
           String? email,
           DateTime? createdAt,
           DateTime? updatedAt,
           Value<bool?> isPremium = const Value.absent()}) =>
       User(
-        id: id ?? this.id,
+        uid: uid ?? this.uid,
         displayName: displayName ?? this.displayName,
         email: email ?? this.email,
         createdAt: createdAt ?? this.createdAt,
@@ -208,7 +207,7 @@ class User extends DataClass implements Insertable<User> {
       );
   User copyWithCompanion(UsersCompanion data) {
     return User(
-      id: data.id.present ? data.id.value : this.id,
+      uid: data.uid.present ? data.uid.value : this.uid,
       displayName:
           data.displayName.present ? data.displayName.value : this.displayName,
       email: data.email.present ? data.email.value : this.email,
@@ -221,7 +220,7 @@ class User extends DataClass implements Insertable<User> {
   @override
   String toString() {
     return (StringBuffer('User(')
-          ..write('id: $id, ')
+          ..write('uid: $uid, ')
           ..write('displayName: $displayName, ')
           ..write('email: $email, ')
           ..write('createdAt: $createdAt, ')
@@ -233,12 +232,12 @@ class User extends DataClass implements Insertable<User> {
 
   @override
   int get hashCode =>
-      Object.hash(id, displayName, email, createdAt, updatedAt, isPremium);
+      Object.hash(uid, displayName, email, createdAt, updatedAt, isPremium);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is User &&
-          other.id == this.id &&
+          other.uid == this.uid &&
           other.displayName == this.displayName &&
           other.email == this.email &&
           other.createdAt == this.createdAt &&
@@ -247,71 +246,79 @@ class User extends DataClass implements Insertable<User> {
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
-  final Value<int> id;
+  final Value<String> uid;
   final Value<String> displayName;
   final Value<String> email;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<bool?> isPremium;
+  final Value<int> rowid;
   const UsersCompanion({
-    this.id = const Value.absent(),
+    this.uid = const Value.absent(),
     this.displayName = const Value.absent(),
     this.email = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.isPremium = const Value.absent(),
+    this.rowid = const Value.absent(),
   });
   UsersCompanion.insert({
-    this.id = const Value.absent(),
+    required String uid,
     required String displayName,
     required String email,
     required DateTime createdAt,
     required DateTime updatedAt,
     this.isPremium = const Value.absent(),
-  })  : displayName = Value(displayName),
+    this.rowid = const Value.absent(),
+  })  : uid = Value(uid),
+        displayName = Value(displayName),
         email = Value(email),
         createdAt = Value(createdAt),
         updatedAt = Value(updatedAt);
   static Insertable<User> custom({
-    Expression<int>? id,
+    Expression<String>? uid,
     Expression<String>? displayName,
     Expression<String>? email,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<bool>? isPremium,
+    Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
-      if (id != null) 'id': id,
+      if (uid != null) 'uid': uid,
       if (displayName != null) 'display_name': displayName,
       if (email != null) 'email': email,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isPremium != null) 'is_premium': isPremium,
+      if (rowid != null) 'rowid': rowid,
     });
   }
 
   UsersCompanion copyWith(
-      {Value<int>? id,
+      {Value<String>? uid,
       Value<String>? displayName,
       Value<String>? email,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt,
-      Value<bool?>? isPremium}) {
+      Value<bool?>? isPremium,
+      Value<int>? rowid}) {
     return UsersCompanion(
-      id: id ?? this.id,
+      uid: uid ?? this.uid,
       displayName: displayName ?? this.displayName,
       email: email ?? this.email,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isPremium: isPremium ?? this.isPremium,
+      rowid: rowid ?? this.rowid,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (id.present) {
-      map['id'] = Variable<int>(id.value);
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
     }
     if (displayName.present) {
       map['display_name'] = Variable<String>(displayName.value);
@@ -328,18 +335,22 @@ class UsersCompanion extends UpdateCompanion<User> {
     if (isPremium.present) {
       map['is_premium'] = Variable<bool>(isPremium.value);
     }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
     return map;
   }
 
   @override
   String toString() {
     return (StringBuffer('UsersCompanion(')
-          ..write('id: $id, ')
+          ..write('uid: $uid, ')
           ..write('displayName: $displayName, ')
           ..write('email: $email, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
-          ..write('isPremium: $isPremium')
+          ..write('isPremium: $isPremium, ')
+          ..write('rowid: $rowid')
           ..write(')'))
         .toString();
   }
@@ -358,20 +369,22 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 }
 
 typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
-  Value<int> id,
+  required String uid,
   required String displayName,
   required String email,
   required DateTime createdAt,
   required DateTime updatedAt,
   Value<bool?> isPremium,
+  Value<int> rowid,
 });
 typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
-  Value<int> id,
+  Value<String> uid,
   Value<String> displayName,
   Value<String> email,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
   Value<bool?> isPremium,
+  Value<int> rowid,
 });
 
 class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
@@ -382,8 +395,8 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnFilters<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get uid => $composableBuilder(
+      column: $table.uid, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get displayName => $composableBuilder(
       column: $table.displayName, builder: (column) => ColumnFilters(column));
@@ -410,8 +423,8 @@ class $$UsersTableOrderingComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  ColumnOrderings<int> get id => $composableBuilder(
-      column: $table.id, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get uid => $composableBuilder(
+      column: $table.uid, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get displayName => $composableBuilder(
       column: $table.displayName, builder: (column) => ColumnOrderings(column));
@@ -438,8 +451,8 @@ class $$UsersTableAnnotationComposer
     super.$addJoinBuilderToRootComposer,
     super.$removeJoinBuilderFromRootComposer,
   });
-  GeneratedColumn<int> get id =>
-      $composableBuilder(column: $table.id, builder: (column) => column);
+  GeneratedColumn<String> get uid =>
+      $composableBuilder(column: $table.uid, builder: (column) => column);
 
   GeneratedColumn<String> get displayName => $composableBuilder(
       column: $table.displayName, builder: (column) => column);
@@ -480,36 +493,40 @@ class $$UsersTableTableManager extends RootTableManager<
           createComputedFieldComposer: () =>
               $$UsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
-            Value<int> id = const Value.absent(),
+            Value<String> uid = const Value.absent(),
             Value<String> displayName = const Value.absent(),
             Value<String> email = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
             Value<bool?> isPremium = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
               UsersCompanion(
-            id: id,
+            uid: uid,
             displayName: displayName,
             email: email,
             createdAt: createdAt,
             updatedAt: updatedAt,
             isPremium: isPremium,
+            rowid: rowid,
           ),
           createCompanionCallback: ({
-            Value<int> id = const Value.absent(),
+            required String uid,
             required String displayName,
             required String email,
             required DateTime createdAt,
             required DateTime updatedAt,
             Value<bool?> isPremium = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
           }) =>
               UsersCompanion.insert(
-            id: id,
+            uid: uid,
             displayName: displayName,
             email: email,
             createdAt: createdAt,
             updatedAt: updatedAt,
             isPremium: isPremium,
+            rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) => (e.readTable(table), BaseReferences(db, table, e)))

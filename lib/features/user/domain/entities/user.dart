@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:life_track/database/app_database.dart';
 
 class UserEntity {
-  final int? id;
+  final String? uid;
   final String displayName;
   final String email;
   final DateTime? createdAt;
@@ -10,7 +10,7 @@ class UserEntity {
   final bool? isPremium;
 
   const UserEntity({
-    this.id,
+    this.uid,
     required this.displayName,
     required this.email,
     this.createdAt,
@@ -20,7 +20,7 @@ class UserEntity {
 
   UsersCompanion toCompanion({bool nullToAbsent = true}) {
     return UsersCompanion(
-      id: id != null ? Value(id!) : const Value.absent(),
+      uid: uid != null ? Value(uid!) : const Value.absent(),
       displayName: Value(displayName),
       email: Value(email),
       createdAt: createdAt != null
@@ -35,7 +35,7 @@ class UserEntity {
 
   static UserEntity fromData(User data) {
     return UserEntity(
-      id: data.id,
+      uid: data.uid,
       displayName: data.displayName,
       email: data.email,
       createdAt: data.createdAt,
