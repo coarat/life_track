@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "181517558523",
+    "project_id": "life-track-kk",
+    "storage_bucket": "life-track-kk.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181517558523:android:c53ea2fb27776c597ac65e",
+        "android_client_info": {
+          "package_name": "com.example.life_track"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClGjPaka9P_pZpnfW-nVEz-ZFyeYgOPHw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

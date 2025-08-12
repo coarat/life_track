@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:life_track/routes/app_router.dart';
 import 'package:life_track/providers/app_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:life_track/firebase_options.dart';
 import 'package:go_router/go_router.dart';
 
 void main() => startApp();
@@ -9,6 +13,12 @@ void main() => startApp();
 Future<void> startApp() async {
   // Flutterのバインディングを初期化（必須）
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  if (kDebugMode) {
+    await FirebaseAuth.instance.useAuthEmulator('localhost', 9000);
+  }
   runApp(
     const ProviderScope(
       child: AppInitializer(),
