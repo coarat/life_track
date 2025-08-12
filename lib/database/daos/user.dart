@@ -9,6 +9,4 @@ part 'user.g.dart';
 @DriftAccessor(tables: [Users])
 class UserDao extends BaseDao<Users, User> with _$UserDaoMixin {
   UserDao(AppDatabase db) : super(db, db.users);
-
-  Stream<List<User>> watchAllUsers() => select(table).watch();
 }
