@@ -12,8 +12,8 @@ class CreateUserScreen extends ConsumerStatefulWidget {
 }
 
 class _CreateUserScreenState extends ConsumerState<CreateUserScreen> {
-  final _displayNameController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _displayNameController = TextEditingController(text: "kenta");
+  final _emailController = TextEditingController(text: "kenta@example.com");
 
   @override
   void dispose() {
@@ -40,7 +40,8 @@ class _CreateUserScreenState extends ConsumerState<CreateUserScreen> {
       return;
     }
 
-    final entity = UserEntity(displayName: displayName, email: email);
+    final entity =
+        UserEntity(uid: 'test', displayName: displayName, email: email);
 
     final userR = ref.read(userRepositoryProvider);
     await userR.insert(entity);

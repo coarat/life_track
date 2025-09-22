@@ -1,6 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:life_track/features/home/ui/home.dart';
 import 'package:life_track/features/user/ui/create_user.dart';
+import 'package:life_track/features/log/ui/create_food.dart';
+import 'package:life_track/features/log/ui/create_bowel.dart';
 
 final appRoutes = [
   GoRoute(
@@ -10,5 +12,9 @@ final appRoutes = [
   GoRoute(
     path: '/user/create',
     builder: (context, state) => const CreateUserScreen(),
+  ),
+  GoRoute(
+    path: '/food-log/create',
+    builder: (context, state) => const CreateFoodLogScreen(),
   ),
 ];
