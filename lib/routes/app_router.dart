@@ -8,13 +8,19 @@ final appRoutes = [
   GoRoute(
     path: '/',
     builder: (context, state) => const HomeScreen(),
+    routes: <GoRoute>[
+      GoRoute(
+        path: '/food-log/create',
+        builder: (context, state) => const CreateFoodLogScreen(),
+      ),
+      GoRoute(
+        path: '/bowel-log/create',
+        builder: (context, state) => const CreateBowelLogScreen(),
+      ),
+    ]
   ),
   GoRoute(
     path: '/user/create',
     builder: (context, state) => const CreateUserScreen(),
-  ),
-  GoRoute(
-    path: '/food-log/create',
-    builder: (context, state) => const CreateFoodLogScreen(),
   ),
 ];

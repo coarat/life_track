@@ -70,15 +70,20 @@ class _CreateFoodScreenState extends ConsumerState<CreateFoodLogScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('食事記録追加')),
-        body: SafeArea(
+      appBar: AppBar(
+        title: const Text('食事記録追加'),
+        automaticallyImplyLeading: true,
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
                 padding: _hPad,
-                child: const TextField(
-                  decoration: InputDecoration(labelText: '検索ワード'),
+                child: TextField(
+                  controller: _imageController,
+                  decoration: InputDecoration(labelText: '食事画像'),
                 ),
               ),
               Expanded(
@@ -129,7 +134,7 @@ class _CreateFoodScreenState extends ConsumerState<CreateFoodLogScreen> {
                       FilledButton.icon(
                         onPressed: _submit,
                         icon: const Icon(Icons.send),
-                        label: const Text('送信'),
+                        label: const Text('登録'),
                       ),
                     ],
                   ),
@@ -137,6 +142,8 @@ class _CreateFoodScreenState extends ConsumerState<CreateFoodLogScreen> {
               ),
             ],
           ),
-        ));
+        ),
+      )
+    );
   }
 }

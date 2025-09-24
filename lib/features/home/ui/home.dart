@@ -15,8 +15,12 @@ class HomeScreen extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ElevatedButton(
-            onPressed: () => context.go('/food-log/create'),
+            onPressed: () => context.push('/food-log/create'),
             child: const Text('食事記録追加'),
+          ),
+          ElevatedButton(
+            onPressed: () => context.push('/bowel-log/create'),
+            child: const Text('排便記録追加'),
           ),
           const SizedBox(height: 8),
         ],

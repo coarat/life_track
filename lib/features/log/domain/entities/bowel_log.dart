@@ -128,7 +128,8 @@ enum ThicknessEnum {
   thin(1, "細い"),
   normal(2, "普通"),
   thick(3, "太い"),
-  veryThick(4, "とても太い");
+  veryThick(4, "とても太い"),
+  noTickness(5, "当てはまらない");
 
   final int code;
   final String label;
